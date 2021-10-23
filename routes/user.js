@@ -45,7 +45,7 @@ router.post('/login', (req, res) => {
                 if (isMatch) {
                     console.log("l'authentification faite avec succès : ", req.body);
                     var token = jwt.sign({ id: result[0].id }, process.env.key);
-                    return res.status(200).json({ token })
+                    return res.status(200).json({ token, role:result[0].role })
                 } else {
                     console.log("password incorrect ", req.body);
                     return res.status(500).json({})
