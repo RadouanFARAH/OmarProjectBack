@@ -11,11 +11,13 @@ var villeRouter = require('./routes/ville_quartier.js');
 var categoryRouter = require('./routes/categories.js');
 var productRouter = require('./routes/product.js');
 var orderRouter = require('./routes/orders.js');
+var vendeurRouter = require('./routes/vendeur.js');
 app.use('/user', userRouter)
 app.use('/ville_quartier', villeRouter)
 app.use('/category', categoryRouter)
 app.use('/product', productRouter)
 app.use('/orders', orderRouter)
+app.use('/vendeur_dashboard', vendeurRouter)
 
 
 
