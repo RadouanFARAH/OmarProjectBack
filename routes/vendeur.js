@@ -1,8 +1,9 @@
 var express = require('express');
 var pool = require('../config/db')
 var router = express.Router();
+var auth = require('../midelwares/authorization')
 
-router.get('/', (req, res) => {
+router.get('/',auth, (req, res) => {
     let idvendeur=req.userID;
     let day = new Date().getDay();
     let dateActuelle = new Date().toISOString().split('T')[0]
