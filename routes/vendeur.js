@@ -25,7 +25,7 @@ router.get('/',auth, (req, res) => {
 router.get('/consoValide', auth, (req, res)=>{
     let idvendeur=req.userID
     let dateActuelle = new Date().toISOString().split('T')[0]
-    pool.query(`select distinct idconsommateur, B.nomprenom, A.pointtotal, A.prixtotal from orders as A join  users as B on A.idconsommateur = B.id where idvendeur =${idevendeur} and datecommande="${dateActuelle}"`, (err, result) => {
+    pool.query(`select  A.*, B.* from orders as A join  users as B on A.idconsommateur = B.id where idvendeur =${idevendeur} and datecommande="${dateActuelle}"`, (err, result) => {
         if (err) {
             console.log("Erreur dans la récupération des vendeur_dashboard : ", err);
             return res.status(500).json({})
