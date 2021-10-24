@@ -18,14 +18,24 @@ router.get('/',auth, (req, res) => {
         }
     })
 })
-// nomConso: "محمد",
-// noteDemande: 40,
-// prixDemande: 500,
-// etatDemande: "V"
 router.get('/consoValide', auth, (req, res)=>{
     let idvendeur=req.userID
     let dateActuelle = new Date().toISOString().split('T')[0]
     pool.query(`select  A.*, B.*, "V" as etatDemande from orders as A join  users as B on A.idconsommateur = B.id where idvendeur =${idvendeur} and datecommande="${dateActuelle}"`, (err, result) => {
+        if (err) {
+            console.log("Erreur dans la récupération des vendeur_dashboard : ", err);
+            return res.status(500).json({})
+        }
+        else {
+            return res.status(200).json(result);
+        }
+    })
+})
+router.get('/consoAttente', auth, (req, res)=>{
+    let idvendeur=req.userID
+    let dateActuelle = new Date().toISOString().split('T')[0]
+    let day = new Date().getDay();
+    pool.query(`select  *, "A" as etatDemande from  users where idconsommateur in (select idconsommateur from vendeurconsommateur where idvendeur=${idvendeur} and idquartier=(select idquartier from vendeur_day_zone where idvendeur=${idvendeur} and day=${day}) and idconsommateur not in (select DISTINCT idConsommateur from orders where idVendeur = ${idvendeur} and datecommande ="${dateActuelle}" and idConsommateur in (select id from users where quartier = (select idquartier from vendeur_day_zone where idvendeur=${idvendeur} and day=${day}))))`, (err, result) => {
         if (err) {
             console.log("Erreur dans la récupération des vendeur_dashboard : ", err);
             return res.status(500).json({})
