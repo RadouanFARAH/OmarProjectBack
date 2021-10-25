@@ -31,6 +31,32 @@ router.get('/consoValide', auth, (req, res)=>{
         }
     })
 })
+
+router.get(`/getConsoGlobal`,(req,res)=>{
+    let idvendeur = req.userID
+    let day = new Date().getDay();
+    pool.query(`select * from users where id in (select idconsommateur from vendeurconsommateur where idvendeur=${idvendeur} and idquartier=(select idquartier from vendeur_day_zone where idvendeur=${idvendeur} and day=${day}))`, (error, result)=>{
+        if (error) {
+            console.log("Erreur dans la récupération des vendeur_dashboard getConsoGlobal: ", err);
+            return res.status(500).json({})
+        }else{
+            return res.status(200).json(result);
+        }
+    })
+})
+router.post(`/getConsoGlobalByQuartier`,(req,res)=>{
+    let idquartier = req.body.idquartier
+    let idvendeur = req.userID
+    let day = new Date().getDay();
+    pool.query(`select * from users where id in (select idconsommateur from vendeurconsommateur where idvendeur=${idvendeur} and idquartier=(select idquartier from vendeur_day_zone where idvendeur=${idvendeur} and day=${day})) and quartier=${idquartier}`, (error, result)=>{
+        if (error) {
+            console.log("Erreur dans la récupération des vendeur_dashboard getConsoGlobalbyQuartier: ", err);
+            return res.status(500).json({})
+        }else{
+            return res.status(200).json(result);
+        }
+    })
+})
 router.get('/consoAttente', auth, (req, res)=>{
     let idvendeur=req.userID
     let dateActuelle = new Date().toISOString().split('T')[0]
