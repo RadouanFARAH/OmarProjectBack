@@ -35,8 +35,8 @@ router.get('/consoValide', auth, (req, res)=>{
 router.get(`/getConsoGlobal`,(req,res)=>{
     let idvendeur = req.userID
     let day = new Date().getDay();
-    pool.query(`select * from users where id in (select idconsommateur from vendeurconsommateur where idvendeur=${idvendeur} and idquartier=(select idquartier from vendeur_day_zone where idvendeur=${idvendeur} and day=${day}))`, (error, result)=>{
-        if (error) {
+    pool.query(`select * from users where id in (select idconsommateur from vendeurconsommateur where idvendeur=${idvendeur} and idquartier=(select idquartier from vendeur_day_zone where idvendeur=${idvendeur} and day=${day}))`, (err, result)=>{
+        if (err) {
             console.log("Erreur dans la récupération des vendeur_dashboard getConsoGlobal: ", err);
             return res.status(500).json({})
         }else{
