@@ -26,11 +26,12 @@ router.post('/setOrdersConsommateur', auth, (req, res) => {
     console.log(`insert into orders (codecommande, prixtotal, pointtotal, datecommande, idConsommateur, idVendeur) values
     ("${codecommande}", ${req.body.prixtotal}, ${req.body.pointtotal}, now(),${req.userID} ,${req.body.order[0].user})`);
 
-    pool.query(`select * from orders where datecommande="${dateActuelle}" and idConsommateur=${idconso} idVendeur=${idvendeur}`, (err, order)=>{
+    pool.query(`select * from orders where datecommande="${dateActuelle}" and idConsommateur=${idconso} and idVendeur=${idvendeur}`, (err, order)=>{
         if (err) {
+            console.log(err);
             return res.status(500).json({})
-        }else if(result.length>0 ){
-            pool.query(`update orders prixtotal=prixtotal+${req.body.prixtotal}, pointtotal=pointtotal+${req.body.pointtotal} where id=${order[0].id}`, (err, result) => {
+        }else if(order.length>0 ){
+            pool.query(`update orders set prixtotal=prixtotal+${req.body.prixtotal}, pointtotal=pointtotal+${req.body.pointtotal} where id=${order[0].id}`, (err, result) => {
             if (err) {
                 console.log("Erreur dans l'insertion de la commande : ", err);
                 return res.status(500).json({})
